@@ -15,69 +15,69 @@ import {
   Form
 } from 'semantic-ui-react'
 
-import { createArticle, deleteArticle, getArticles, patchArticle } from '../api/articles-api'
+import { createBook, deleteBook, getBooks, patchBook } from '../api/books-api'
 import Auth from '../auth/Auth'
-import { Article } from '../types/Article'
+import { Book } from '../types/Book'
 
-interface ArticlesProps {
+interface BooksProps {
   auth: Auth
   history: History
 }
 
-interface ArticlesState {
-  articles: Article[]
-  article: Article
-  newArticle: { name: string, description: string },
-  loadingArticles: boolean,
+interface BooksState {
+  books: Book[]
+  book: Book
+  newBook: { name: string, description: string },
+  loadingBooks: boolean,
   openAddModal: boolean,
   openEditModal: boolean,
-  indexArticle: number,
+  indexBook: number,
 }
 
-export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> {
-  state: ArticlesState = {
-    articles: [],
-    article: {
-      articleId: '',
+export class Books extends React.PureComponent<BooksProps, BooksState> {
+  state: BooksState = {
+    books: [],
+    book: {
+      bookId: '',
       createdAt: '',
       name: '',
       description: '',
       publish: ''
     },
-    newArticle: { name: '', description: '' },
-    loadingArticles: true,
+    newBook: { name: '', description: '' },
+    loadingBooks: true,
     openAddModal: false,
     openEditModal: false,
-    indexArticle: -1,
+    indexBook: -1,
 
   }
   
   handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newArticle = {...this.state.newArticle, name: event.target.value };
-    this.setState({ newArticle })
+    const newBook = {...this.state.newBook, name: event.target.value };
+    this.setState({ newBook })
   }
   handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newArticle = {...this.state.newArticle, description: event.target.value };
-    this.setState({ newArticle })
+    const newBook = {...this.state.newBook, description: event.target.value };
+    this.setState({ newBook })
   }
 
   handleTitleEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const article = {...this.state.article, name: event.target.value };
-    this.setState({ article })
+    const book = {...this.state.book, name: event.target.value };
+    this.setState({ book })
   }
 
   handleDescriptionEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const article = {...this.state.article, description: event.target.value };
-    this.setState({ article })
+    const book = {...this.state.book, description: event.target.value };
+    this.setState({ book })
   }
 
   setOpen = (openAddModal: boolean) => {
-    this.setState({openAddModal, newArticle: { name: '', description: '' }})
+    this.setState({openAddModal, newBook: { name: '', description: '' }})
   }
   setEdit = (openEditModal: boolean, pos: number) => {
-    const article = this.state.articles[pos]
-    if (article) {
-      this.setState({openEditModal, article, indexArticle: pos })
+    const book = this.state.books[pos]
+    if (book) {
+      this.setState({openEditModal, book, indexBook: pos })
       
     }
     else {
@@ -85,115 +85,115 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
     }
   }
 
-  onEditButtonClick = (articleId: string) => {
-    this.props.history.push(`/articles/${articleId}/edit`)
+  onEditButtonClick = (bookId: string) => {
+    this.props.history.push(`/books/${bookId}/edit`)
   }
 
-  onArticleCreate = async () => {
+  onBookCreate = async () => {
     try {
       const createdAt = dateFormat(new Date(), 'yyyy-mm-dd')
-      const { name, description} = this.state.newArticle;
-      const newArticle = await createArticle(this.props.auth.getIdToken(), {
+      const { name, description} = this.state.newBook;
+      const newBook = await createBook(this.props.auth.getIdToken(), {
         name,
         description,
         publish: '',
         createdAt
       })
       this.setState({
-        articles: [...this.state.articles, newArticle],
+        books: [...this.state.books, newBook],
         openAddModal: false
       })
     } catch {
-      alert('Article creation failed')
+      alert('Book creation failed')
     }
   }
 
-  onArticleDelete = async (articleId: string) => {
+  onBookDelete = async (bookId: string) => {
     try {
-      await deleteArticle(this.props.auth.getIdToken(), articleId)
+      await deleteBook(this.props.auth.getIdToken(), bookId)
       this.setState({
-        articles: this.state.articles.filter(article => article.articleId !== articleId)
+        books: this.state.books.filter(book => book.bookId !== bookId)
       })
     } catch {
-      alert('Article deletion failed')
+      alert('Book deletion failed')
     }
   }
 
-  onPublishArticle = async (pos: number) => {
+  onPublishBook = async (pos: number) => {
     try {
-      const article = this.state.articles[pos]
-      await patchArticle(this.props.auth.getIdToken(), article.articleId, {
-        name: article.name,
-        createdAt: article.createdAt,
-        publish: article.publish == 'y'? 'n' : "y",
-        description: article.description
+      const book = this.state.books[pos]
+      await patchBook(this.props.auth.getIdToken(), book.bookId, {
+        name: book.name,
+        createdAt: book.createdAt,
+        publish: book.publish == 'y'? 'n' : "y",
+        description: book.description
       })
       this.setState({
-        articles: update(this.state.articles, {
-          [pos]: { publish: { $set: article.publish == 'y'? 'n' : "y" } }
+        books: update(this.state.books, {
+          [pos]: { publish: { $set: book.publish == 'y'? 'n' : "y" } }
         })
       })
     } catch {
-      alert('Article deletion failed')
+      alert('Book deletion failed')
     }
   }
 
-  onArticleUpdate = async (pos: number) => {
+  onBookUpdate = async (pos: number) => {
     try {
-      const article = this.state.article
-      await patchArticle(this.props.auth.getIdToken(), article.articleId, {
-        name: article.name,
-        createdAt: article.createdAt,
-        publish: article.publish,
-        description: article.description
+      const book = this.state.book
+      await patchBook(this.props.auth.getIdToken(), book.bookId, {
+        name: book.name,
+        createdAt: book.createdAt,
+        publish: book.publish,
+        description: book.description
       })
       this.setState({
-        articles: update(this.state.articles, {
-          [pos]: { name: { $set: article.name }, description: { $set: article.description } }
+        books: update(this.state.books, {
+          [pos]: { name: { $set: book.name }, description: { $set: book.description } }
         }),
-        article: {name: '', description: '', createdAt: '', publish: '', articleId: ""},
-        indexArticle: -1,
+        book: {name: '', description: '', createdAt: '', publish: '', bookId: ""},
+        indexBook: -1,
         openEditModal: false,
       })
     } catch {
-      alert('Article deletion failed')
+      alert('Book update failed')
     }
   }
 
   async componentDidMount() {
     try {
-      const articles = await getArticles(this.props.auth.getIdToken())
+      const books = await getBooks(this.props.auth.getIdToken())
       this.setState({
-        articles,
-        loadingArticles: false
+        books,
+        loadingBooks: false
       })
     } catch (e) {
-      console.log(`Failed to fetch articles`, e)
+      console.log(`Failed to fetch books`, e)
     }
   }
 
   render() {
     return (
       <div>
-        <Header as="h1">ARTICLES</Header>
+        <Header as="h1">BOOKS</Header>
 
-        {this.renderArticleModal()}
-        {this.renderArticleEditModal()}
-        {this.renderCreateArticleInput()}
+        {this.renderBookModal()}
+        {this.renderBookEditModal()}
+        {this.renderCreateBookInput()}
 
-        {this.renderArticles()}
+        {this.renderBookList()}
       </div>
     )
   }
 
-  renderArticleModal() {
+  renderBookModal() {
     return (
       <Modal
             onClose={() => this.setOpen(false)}
             onOpen={() => this.setOpen(true)}
             open={this.state.openAddModal}
           >
-            <Modal.Header>Add new Article</Modal.Header>
+            <Modal.Header>Add new Book</Modal.Header>
             <Modal.Content>
             <Form>
               <Form.Field required>
@@ -214,32 +214,32 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
                 content="Add"
                 labelPosition='right'
                 icon='add'
-                onClick={()=>this.onArticleCreate()}
+                onClick={()=>this.onBookCreate()}
                 positive
-                disabled={this.state.newArticle.name =='' || this.state.newArticle.description == ''}
+                disabled={this.state.newBook.name =='' || this.state.newBook.description == ''}
               />
             </Modal.Actions>
        </Modal>
     )
   }
 
-  renderArticleEditModal() {
+  renderBookEditModal() {
     return (
       <Modal
             onClose={() => this.setEdit(false, -1)}
             onOpen={() => this.setEdit(true, -1)}
             open={this.state.openEditModal}
           >
-            <Modal.Header>Edit Article</Modal.Header>
+            <Modal.Header>Edit Book</Modal.Header>
             <Modal.Content>
             <Form>
               <Form.Field required>
                 <label>Title</label>
-                <Input placeholder='Please enter the Title' onChange={this.handleTitleEditChange} value={this.state.article.name}/>
+                <Input placeholder='Please enter the Title' onChange={this.handleTitleEditChange} value={this.state.book.name}/>
               </Form.Field>
               <Form.Field required>
                 <label>Description</label>
-                <Input placeholder='Please enter the Description' onChange={this.handleDescriptionEditChange} value={this.state.article.description}/>
+                <Input placeholder='Please enter the Description' onChange={this.handleDescriptionEditChange} value={this.state.book.description}/>
               </Form.Field>
             </Form>
             </Modal.Content>
@@ -251,7 +251,7 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
                 content="Save"
                 labelPosition='right'
                 icon='save'
-                onClick={()=>this.onArticleUpdate(this.state.indexArticle)}
+                onClick={()=>this.onBookUpdate(this.state.indexBook)}
                 positive
               />
             </Modal.Actions>
@@ -259,7 +259,7 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
     )
   }
 
-  renderCreateArticleInput() {
+  renderCreateBookInput() {
     return (
       <Grid.Row>
         <Grid.Column width={16}>
@@ -276,25 +276,25 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
     )
   }
 
-  renderArticles() {
-    if (this.state.loadingArticles) {
+  renderBookList() {
+    if (this.state.loadingBooks) {
       return this.renderLoading()
     }
 
-    return this.renderArticlesList()
+    return this.renderBooksList()
   }
 
   renderLoading() {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading ARTICLES
+          Loading BOOKS
         </Loader>
       </Grid.Row>
     )
   }
 
-  renderArticlesList() {
+  renderBooksList() {
     return (
       <Grid padded>
         <Grid.Row key={1}>
@@ -324,18 +324,18 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
                </Grid.Column>
         </Grid.Row>
 
-        {this.state.articles.map((article, pos) => {
+        {this.state.books.map((book, pos) => {
           return (
-            <Grid.Row key={article.articleId}>
+            <Grid.Row key={book.bookId}>
                
               <Grid.Column width={4} verticalAlign="middle">
-                {article.name}
+                {book.name}
               </Grid.Column>
               <Grid.Column width={5} verticalAlign="middle">
-                {article.description}
+                {book.description}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {article.createdAt}
+                {book.createdAt}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
@@ -350,7 +350,7 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(article.articleId)}
+                  onClick={() => this.onEditButtonClick(book.bookId)}
                 >
                   <Icon name="upload" />
                 </Button>
@@ -358,8 +358,8 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
-                  color={article.publish == 'y'? "blue": "brown"}
-                  onClick={() => this.onPublishArticle(pos)}
+                  color={book.publish == 'y'? "blue": "brown"}
+                  onClick={() => this.onPublishBook(pos)}
                 >
                   <Icon name="share" />
                 </Button>
@@ -368,13 +368,13 @@ export class Articles extends React.PureComponent<ArticlesProps, ArticlesState> 
                 <Button
                   icon
                   color="red"
-                  onClick={() => this.onArticleDelete(article.articleId)}
+                  onClick={() => this.onBookDelete(book.bookId)}
                 >
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {article.attachmentUrl && (
-                <Image src={article.attachmentUrl} size="small" wrapped />
+              {book.attachmentUrl && (
+                <Image src={book.attachmentUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />

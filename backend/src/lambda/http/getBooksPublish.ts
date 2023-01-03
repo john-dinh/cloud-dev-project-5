@@ -3,14 +3,14 @@ import 'source-map-support/register'
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
-import { getArticlesForPublish } from '../../businessLogic/articles'
+import { getBooksForPublish } from '../../businessLogic/books'
 
 
-// export const getArticles: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-export const getArticlesPublish: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+// export const getBooks: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const getBooks: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const publish = event.pathParameters.publish
   const createdAt = event.pathParameters.createdAt
-  const result = await getArticlesForPublish(publish, createdAt);
+  const result = await getBooksForPublish(publish, createdAt);
   const items = result.Items
   console.log('items:', items)
 
@@ -27,7 +27,7 @@ export const getArticlesPublish: APIGatewayProxyHandler = async (event: APIGatew
 }
 
 
-export const handler = middy(getArticlesPublish)
+export const handler = middy(getBooks)
 handler
   .use(
     cors({

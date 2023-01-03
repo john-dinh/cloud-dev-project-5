@@ -1,22 +1,22 @@
 [
     {
       "userId": "1",
-      "articleId": "1",
+      "bookId": "1",
       "createdAt": "2015-03-25"
     },
     {
       "userId": "1",
-      "articleId": "2",
+      "bookId": "2",
       "createdAt": "2015-03-25"
     },
     {
       "userId": "1",
-      "articleId": "3",
+      "bookId": "3",
       "createdAt": "2015-03-25"
     },
     {
       "userId": "2",
-      "articleId": "1",
+      "bookId": "1",
       "createdAt": "2015-03-25"
     }
 ]

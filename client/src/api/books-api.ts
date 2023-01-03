@@ -1,13 +1,13 @@
 import { apiEndpoint } from '../config'
-import { Article } from '../types/Article';
-import { CreateArticleRequest } from '../types/CreateArticleRequest';
+import { Book } from '../types/Book';
+import { CreateBookRequest } from '../types/CreateBookRequest';
 import Axios from 'axios'
-import { UpdateArticleRequest } from '../types/UpdateArticleRequest';
+import { UpdateBookRequest } from '../types/UpdateBookRequest';
 
-export async function getArticlesForPublish(createdAt: string): Promise<Article[]> {
-  console.log('Fetching articles')
+export async function getBooksForPublish(createdAt: string): Promise<Book[]> {
+  console.log('Fetching books')
 
-  const response = await Axios.get(`${apiEndpoint}/articles-publish/y/${createdAt}`, {
+  const response = await Axios.get(`${apiEndpoint}/books-publish/y/${createdAt}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -15,10 +15,10 @@ export async function getArticlesForPublish(createdAt: string): Promise<Article[
   return response.data.items
 }
 
-export async function getArticles(idToken: string): Promise<Article[]> {
-  console.log('Fetching articles')
+export async function getBooks(idToken: string): Promise<Book[]> {
+  console.log('Fetching books')
 
-  const response = await Axios.get(`${apiEndpoint}/articles`, {
+  const response = await Axios.get(`${apiEndpoint}/books`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -27,11 +27,11 @@ export async function getArticles(idToken: string): Promise<Article[]> {
   return response.data.items
 }
 
-export async function createArticle(
+export async function createBook(
   idToken: string,
-  newArticle: CreateArticleRequest
-): Promise<Article> {
-  const response = await Axios.post(`${apiEndpoint}/articles`,  JSON.stringify(newArticle), {
+  newBook: CreateBookRequest
+): Promise<Book> {
+  const response = await Axios.post(`${apiEndpoint}/books`,  JSON.stringify(newBook), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -40,12 +40,12 @@ export async function createArticle(
   return response.data.item
 }
 
-export async function patchArticle(
+export async function patchBook(
   idToken: string,
-  articleId: string,
-  updatedArticle: UpdateArticleRequest
+  bookId: string,
+  updatedBook: UpdateBookRequest
 ): Promise<void> {
-  await Axios.patch(`${apiEndpoint}/articles/${articleId}`, JSON.stringify(updatedArticle), {
+  await Axios.patch(`${apiEndpoint}/books/${bookId}`, JSON.stringify(updatedBook), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -53,11 +53,11 @@ export async function patchArticle(
   })
 }
 
-export async function deleteArticle(
+export async function deleteBook(
   idToken: string,
-  articleId: string
+  bookId: string
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/articles/${articleId}`, {
+  await Axios.delete(`${apiEndpoint}/books/${bookId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -65,11 +65,11 @@ export async function deleteArticle(
   })
 }
 
-export async function getArticle(
+export async function getBook(
   idToken: string,
-  articleId: string
+  bookId: string
 ): Promise<void> {
-  await Axios.get(`${apiEndpoint}/articles/${articleId}`, {
+  await Axios.get(`${apiEndpoint}/books/${bookId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -79,9 +79,9 @@ export async function getArticle(
 
 export async function getUploadUrl(
   idToken: string,
-  articleId: string
+  bookId: string
 ): Promise<string> {
-  const response = await Axios.post(`${apiEndpoint}/articles/${articleId}/attachment`, '', {
+  const response = await Axios.post(`${apiEndpoint}/books/${bookId}/attachment`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`

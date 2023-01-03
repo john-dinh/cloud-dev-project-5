@@ -3,10 +3,10 @@ import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
-import { EditArticle } from './components/EditArticle'
+import { EditBook } from './components/EditBook'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
-import { Articles } from './components/Articles'
+import { Books } from './components/Books'
 
 export interface AppProps {}
 
@@ -92,15 +92,15 @@ export default class App extends Component<AppProps, AppState> {
           path="/"
           exact
           render={props => {
-            return <Articles {...props} auth={this.props.auth} />
+            return <Books {...props} auth={this.props.auth} />
           }}
         />
 
         <Route
-          path="/articles/:articleId/edit"
+          path="/books/:bookId/edit"
           exact
           render={props => {
-            return <EditArticle {...props} auth={this.props.auth} />
+            return <EditBook {...props} auth={this.props.auth} />
           }}
         />
 

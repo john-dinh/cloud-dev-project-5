@@ -3,14 +3,14 @@ import * as moment from 'moment';
 import * as AWS from 'aws-sdk';
 const AWSXRay = require('aws-xray-sdk');
 
-export class ArticleAccess {
+export class BookAccess {
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
-        private readonly articlesTable = process.env.ARTICLES_TABLE
+        private readonly booksTable = process.env.BOOKS_TABLE
     ) { }
-    async getArticles(userId: string) {
+    async getBooks(userId: string) {
         const queryParams = {
-            TableName: this.articlesTable,
+            TableName: this.booksTable,
             KeyConditionExpression: "userId = :userId",
             ExpressionAttributeValues: {
                 ":userId": userId,
@@ -20,7 +20,7 @@ export class ArticleAccess {
         return await this.docClient.query(queryParams).promise();
     }
 
-    async getArticlesForPublish(publish, createdAt) {
+    async getBooksForPublish(publish, createdAt) {
         console.log('createdAt', createdAt)
         let KeyConditionExpression = ""
         let ExpressionAttributeValues:{} =  {}
@@ -36,28 +36,28 @@ export class ArticleAccess {
         }
         console.log('KeyConditionExpression=', KeyConditionExpression, ExpressionAttributeValues)
         const queryParams = {
-            TableName: this.articlesTable,
-            IndexName: process.env.ARTICLES_PUBLISH_INDEX,
+            TableName: this.booksTable,
+            IndexName: process.env.BOOKS_PUBLISH_INDEX,
             KeyConditionExpression,
             ExpressionAttributeValues,
         };
         return await this.docClient.query(queryParams).promise();
     }
 
-    async createArticle(articleItem) {
+    async createBook(bookItem) {
         return await this.docClient.put({
-            TableName: this.articlesTable,
-            Item: articleItem
+            TableName: this.booksTable,
+            Item: bookItem
         }).promise()
     }
 
-    async deleteArticle(userId: string, articleId: string) {
+    async deleteBook(userId: string, bookId: string) {
 
         const params = {
-            TableName: this.articlesTable,
+            TableName: this.booksTable,
             Key: {
                 userId,
-                articleId
+                bookId
             },
         };
 
@@ -72,13 +72,13 @@ export class ArticleAccess {
         }
     }
 
-    async updateArticle(payload: any) {
-        const { userId, articleId, name, description, publish } = payload
+    async updateBook(payload: any) {
+        const { userId, bookId, name, description, publish } = payload
         const params = {
-            TableName: this.articlesTable,
+            TableName: this.booksTable,
             Key: {
                 userId,
-                articleId
+                bookId
             },
             UpdateExpression: "set description =:description, publish=:publish, #name=:name, createdAt=:createdAt",
             ExpressionAttributeValues: {
@@ -112,13 +112,13 @@ export class ArticleAccess {
         }
     }
 
-    async updateAttachmentArticle(payload: any) {
-        const { userId, articleId, attachmentUrl } = payload
+    async updateAttachmentBook(payload: any) {
+        const { userId, bookId, attachmentUrl } = payload
         const params = {
-            TableName: this.articlesTable,
+            TableName: this.booksTable,
             Key: {
                 userId,
-                articleId
+                bookId
             },
             UpdateExpression: "set attachmentUrl =:attachmentUrl",
             ExpressionAttributeValues: {

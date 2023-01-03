@@ -1,23 +1,23 @@
-# Serverless ARTICLE
+# Serverless Book
 
-To implement this project, you need to implement a simple ARTICLE application using AWS Lambda and Serverless framework. Search for all comments starting with the `ARTICLE:` in the code to find the placeholders that you need to implement.
+To implement this project, you need to implement a simple Book application using AWS Lambda and Serverless framework. Search for all comments starting with the `Book:` in the code to find the placeholders that you need to implement.
 
 # Functionality of the application
 
-This application will allow creating/removing/updating/fetching ARTICLE items. Each ARTICLE item can optionally have an attachment image. Each user only has access to ARTICLE items that he/she has created.
+This application will allow creating/removing/updating/fetching Book items. Each Book item can optionally have an attachment image. Each user only has access to Book items that he/she has created.
 
-# ARTICLE items
+# Book items
 
-The application should store ARTICLE items, and each ARTICLE item contains the following fields:
+The application should store Book items, and each Book item contains the following fields:
 
-* `articleId` (string) - a unique id for an item
+* `bookId` (string) - a unique id for an item
 * `createdAt` (string) - date and time when an item was created
-* `name` (string) - name of a ARTICLE item (e.g. "Change a light bulb")
+* `name` (string) - name of a Book item (e.g. "Change a light bulb")
 * `createdAt` (string) - date and time by which an item should be completed
 * `publish` (boolean) - true if an item was completed, false otherwise
-* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a ARTICLE item
+* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a Book item
 
-You might also store an id of a user who created a ARTICLE item.
+You might also store an id of a user who created a Book item.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ To implement this project, you need to implement the following functions and con
 
 * `Auth` - this function should implement a custom authorizer for API Gateway that should be added to all other functions.
 
-* `GetArticles` - should return all ARTICLES for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+* `GetBooks` - should return all BookS for a current user. A user id can be extracted from a JWT token that is sent by the frontend
 
 It should return data that looks like this:
 
@@ -54,7 +54,7 @@ It should return data that looks like this:
 {
   "items": [
     {
-      "articleId": "123",
+      "bookId": "123",
       "createdAt": "2019-07-27T20:01:45.424Z",
       "name": "Buy milk",
       "createdAt": "2019-07-29T20:01:45.424Z",
@@ -62,7 +62,7 @@ It should return data that looks like this:
       "attachmentUrl": "http://example.com/image.png"
     },
     {
-      "articleId": "456",
+      "bookId": "456",
       "createdAt": "2019-07-27T20:01:45.424Z",
       "name": "Send a letter",
       "createdAt": "2019-07-29T20:01:45.424Z",
@@ -73,9 +73,9 @@ It should return data that looks like this:
 }
 ```
 
-* `CreateArticle` - should create a new ARTICLE for a current user. A shape of data send by a client application to this function can be found in the `CreateArticleRequest.ts` file
+* `CreateBook` - should create a new Book for a current user. A shape of data send by a client application to this function can be found in the `CreateBookRequest.ts` file
 
-It receives a new ARTICLE item to be created in JSON format that looks like this:
+It receives a new Book item to be created in JSON format that looks like this:
 
 ```json
 {
@@ -87,12 +87,12 @@ It receives a new ARTICLE item to be created in JSON format that looks like this
 }
 ```
 
-It should return a new ARTICLE item that looks like this:
+It should return a new Book item that looks like this:
 
 ```json
 {
   "item": {
-    "articleId": "123",
+    "bookId": "123",
     "createdAt": "2019-07-27T20:01:45.424Z",
     "name": "Buy milk",
     "createdAt": "2019-07-29T20:01:45.424Z",
@@ -102,9 +102,9 @@ It should return a new ARTICLE item that looks like this:
 }
 ```
 
-* `UpdateArticle` - should update a ARTICLE item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateArticleRequest.ts` file
+* `updateBook` - should update a Book item created by a current user. A shape of data send by a client application to this function can be found in the `updateBookRequest.ts` file
 
-It receives an object that contains three fields that can be updated in a ARTICLE item:
+It receives an object that contains three fields that can be updated in a Book item:
 
 ```json
 {
@@ -118,11 +118,11 @@ The id of an item that should be updated is passed as a URL parameter.
 
 It should return an empty body.
 
-* `DeleteArticle` - should delete a ARTICLE item created by a current user. Expects an id of a ARTICLE item to remove.
+* `DeleteBook` - should delete a Book item created by a current user. Expects an id of a Book item to remove.
 
 It should return an empty body.
 
-* `GenerateUploadUrl` - returns a pre-signed URL that can be used to upload an attachment file for a ARTICLE item.
+* `GenerateUploadUrl` - returns a pre-signed URL that can be used to upload an attachment file for a Book item.
 
 It should return a JSON object that looks like this:
 
@@ -191,11 +191,11 @@ Once you have finished developing your application, please set `apiId` and Auth0
 
 # Suggestions
 
-To store ARTICLE items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
+To store Book items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
 
 ```yml
 
-ArticlesTable:
+BooksTable:
   Type: AWS::DynamoDB::Table
   Properties:
     AttributeDefinitions:
@@ -211,7 +211,7 @@ ArticlesTable:
       - AttributeName: sortKey
         KeyType: RANGE
     BillingMode: PAY_PER_REQUEST
-    TableName: ${self:provider.environment.ARTICLES_TABLE}
+    TableName: ${self:provider.environment.BookS_TABLE}
     LocalSecondaryIndexes:
       - IndexName: ${self:provider.environment.INDEX_NAME}
         KeySchema:
@@ -261,7 +261,7 @@ npm install
 npm run start
 ```
 
-This should start a development server with the React application that will interact with the serverless ARTICLE application.
+This should start a development server with the React application that will interact with the serverless Book application.
 
 # Postman collection
 

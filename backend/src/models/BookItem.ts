@@ -1,6 +1,6 @@
-export interface ArticleItem {
+export interface BookItem {
   userId: string
-  articleId: string
+  bookId: string
   description: string
   name: string
   createdAt: string

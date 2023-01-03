@@ -4,21 +4,21 @@ import Auth from '../auth/Auth'
 import { Button, Divider, Grid, Image } from 'semantic-ui-react'
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
-import { getArticlesForPublish } from '../api/articles-api'
-import { Article } from '../types/Article'
+import { getBooksForPublish } from '../api/books-api'
+import { Book } from '../types/Book'
 
 interface LogInProps {
   auth: Auth
 }
 
 interface LogInState {
-  articles: any
+  books: any
   
 }
 
 export class LogIn extends React.PureComponent<LogInProps, LogInState> {
   state: LogInState = {
-    articles: [],
+    books: [],
   }
   onLogin = () => {
     this.props.auth.login()
@@ -28,24 +28,24 @@ export class LogIn extends React.PureComponent<LogInProps, LogInState> {
     if(moment(data.value).isValid()){
       createdAt = moment(data.value).format("YYYY-MM-DD")
     }
-    const articles = await getArticlesForPublish(createdAt)
+    const books = await getBooksForPublish(createdAt)
       this.setState({
-        articles,
+        books,
       })
 
   }
 
   async componentDidMount() {
     try {
-      const articles = await getArticlesForPublish('null')
+      const books = await getBooksForPublish('null')
       this.setState({
-        articles,
+        books,
       })
     } catch (e) {
-      console.log(`Failed to fetch articles`, e)
+      console.log(`Failed to fetch books`, e)
     }
   }
-  renderArticlesList() {
+  renderBooksList() {
     return (
       <Grid padded>
         <Grid.Row key={1}>
@@ -63,22 +63,22 @@ export class LogIn extends React.PureComponent<LogInProps, LogInState> {
                </Grid.Column>
         </Grid.Row>
 
-        {this.state.articles.map((article: Article, pos: any) => {
+        {this.state.books.map((book: Book, pos: any) => {
           return (
-            <Grid.Row key={article.articleId}>
+            <Grid.Row key={book.bookId}>
                
               <Grid.Column width={6} verticalAlign="middle">
-                {article.name}
+                {book.name}
               </Grid.Column>
               <Grid.Column width={7} verticalAlign="middle">
-                {article.description}
+                {book.description}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {moment(article.createdAt).format("YYYY-MM-DD HH:mm")}
+                {moment(book.createdAt).format("YYYY-MM-DD HH:mm")}
               </Grid.Column>
              
-              {article.attachmentUrl && (
-                <Image src={article.attachmentUrl} size="small" wrapped />
+              {book.attachmentUrl && (
+                <Image src={book.attachmentUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />
@@ -97,9 +97,9 @@ export class LogIn extends React.PureComponent<LogInProps, LogInState> {
         <Button onClick={this.onLogin} size="huge" color="olive">
           Log in
         </Button>
-        <h1>Articles Publish</h1>
+        <h1>Books Publish</h1>
         <SemanticDatepicker onChange={this.onChangeDate} />
-        {this.renderArticlesList()}
+        {this.renderBooksList()}
       </div>
     )
   }

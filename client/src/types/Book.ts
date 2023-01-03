@@ -1,5 +1,5 @@
-export interface Article {
-  articleId: string
+export interface Book {
+  bookId: string
   createdAt: string
   name: string
   description: string
