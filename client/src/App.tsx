@@ -6,7 +6,7 @@ import Auth from './auth/Auth'
 import { EditBook } from './components/EditBook'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
-import { Books } from './components/Books'
+import { CreateBook } from './components/CreateBook'
 
 export interface AppProps {}
 
@@ -92,7 +92,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/"
           exact
           render={props => {
-            return <Books {...props} auth={this.props.auth} />
+            return <CreateBook {...props} auth={this.props.auth} />
           }}
         />
 

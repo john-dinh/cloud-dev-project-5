@@ -12,16 +12,12 @@
     },
     "createdAt": {
       "type": "string"
-    },
-    "publish": {
-      "type": "string"
     }
   },
   "required": [
     "name",
     "description",
-    "createdAt",
-    "publish"
+    "createdAt"
   ],
   "additionalProperties": true
 }

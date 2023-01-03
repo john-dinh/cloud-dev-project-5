@@ -12,7 +12,7 @@ export const handler = middy(
     const newBook: CreateBookRequest = JSON.parse(event.body)
     const userId = getUserId(event)
     const bookId = uuid.v4()
-    const bookItem = { ...newBook, userId, bookId, publish: "n", createdAt: new Date().toISOString() }
+    const bookItem = { ...newBook, userId, bookId, createdAt: new Date().toISOString() }
 
     await createBook(bookItem)
 

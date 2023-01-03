@@ -3,6 +3,5 @@ export interface Book {
   createdAt: string
   name: string
   description: string
-  publish: string
   attachmentUrl?: string
 }

@@ -4,6 +4,5 @@ export interface BookItem {
   description: string
   name: string
   createdAt: string
-  publish: string
   attachmentUrl?: string
 }

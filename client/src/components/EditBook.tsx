@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
+
 import { getUploadUrl, uploadFile } from '../api/books-api'
 
 enum UploadState {
@@ -57,7 +58,6 @@ export class EditBook extends React.PureComponent<
       await uploadFile(uploadUrl, this.state.file)
 
       alert('File was uploaded!')
-      // TODO update attachment url for Book
     } catch (e) {
       console.log('Could not upload a file: ' , e)
     } finally {
@@ -74,7 +74,7 @@ export class EditBook extends React.PureComponent<
   render() {
     return (
       <div>
-        <h1>Upload new image</h1>
+        <h1>Add Images</h1>
 
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>

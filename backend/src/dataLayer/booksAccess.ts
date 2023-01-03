@@ -73,7 +73,7 @@ export class BookAccess {
     }
 
     async updateBook(payload: any) {
-        const { userId, bookId, name, description, publish } = payload
+        const { userId, bookId, name, description} = payload
         const params = {
             TableName: this.booksTable,
             Key: {
@@ -84,7 +84,6 @@ export class BookAccess {
             ExpressionAttributeValues: {
                 ":name": name,
                 ":description": description,
-                ":publish": publish,
                 ":createdAt": new Date().toISOString()
             },
             ExpressionAttributeNames: {

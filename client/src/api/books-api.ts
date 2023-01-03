@@ -1,11 +1,12 @@
 import { apiEndpoint } from '../config'
-import { Book } from '../types/Book';
-import { CreateBookRequest } from '../types/CreateBookRequest';
+import { Book } from '../types/Book'
 import Axios from 'axios'
-import { UpdateBookRequest } from '../types/UpdateBookRequest';
+
+import { CreateBookRequest } from '../types/CreateBookRequest'
+import { UpdateBookRequest } from '../types/UpdateBookRequest'
 
 export async function getBooksForPublish(createdAt: string): Promise<Book[]> {
-  console.log('Fetching books')
+  console.log('Getting books')
 
   const response = await Axios.get(`${apiEndpoint}/books-publish/y/${createdAt}`, {
     headers: {
@@ -16,7 +17,7 @@ export async function getBooksForPublish(createdAt: string): Promise<Book[]> {
 }
 
 export async function getBooks(idToken: string): Promise<Book[]> {
-  console.log('Fetching books')
+  console.log('Getting books')
 
   const response = await Axios.get(`${apiEndpoint}/books`, {
     headers: {

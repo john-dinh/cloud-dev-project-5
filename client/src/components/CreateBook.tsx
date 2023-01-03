@@ -29,24 +29,23 @@ interface BooksState {
   book: Book
   newBook: { name: string, description: string },
   loadingBooks: boolean,
-  openAddModal: boolean,
+  addBookModal: boolean,
   openEditModal: boolean,
   indexBook: number,
 }
 
-export class Books extends React.PureComponent<BooksProps, BooksState> {
+export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
   state: BooksState = {
     books: [],
     book: {
       bookId: '',
       createdAt: '',
       name: '',
-      description: '',
-      publish: ''
+      description: ''
     },
     newBook: { name: '', description: '' },
     loadingBooks: true,
-    openAddModal: false,
+    addBookModal: false,
     openEditModal: false,
     indexBook: -1,
 
@@ -72,7 +71,7 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
   }
 
   setOpen = (openAddModal: boolean) => {
-    this.setState({openAddModal, newBook: { name: '', description: '' }})
+    this.setState({addBookModal: openAddModal, newBook: { name: '', description: '' }})
   }
   setEdit = (openEditModal: boolean, pos: number) => {
     const book = this.state.books[pos]
@@ -96,12 +95,11 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
       const newBook = await createBook(this.props.auth.getIdToken(), {
         name,
         description,
-        publish: '',
         createdAt
       })
       this.setState({
         books: [...this.state.books, newBook],
-        openAddModal: false
+        addBookModal: false
       })
     } catch {
       alert('Book creation failed')
@@ -119,39 +117,19 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
     }
   }
 
-  onPublishBook = async (pos: number) => {
-    try {
-      const book = this.state.books[pos]
-      await patchBook(this.props.auth.getIdToken(), book.bookId, {
-        name: book.name,
-        createdAt: book.createdAt,
-        publish: book.publish == 'y'? 'n' : "y",
-        description: book.description
-      })
-      this.setState({
-        books: update(this.state.books, {
-          [pos]: { publish: { $set: book.publish == 'y'? 'n' : "y" } }
-        })
-      })
-    } catch {
-      alert('Book deletion failed')
-    }
-  }
-
   onBookUpdate = async (pos: number) => {
     try {
       const book = this.state.book
       await patchBook(this.props.auth.getIdToken(), book.bookId, {
         name: book.name,
         createdAt: book.createdAt,
-        publish: book.publish,
         description: book.description
       })
       this.setState({
         books: update(this.state.books, {
           [pos]: { name: { $set: book.name }, description: { $set: book.description } }
         }),
-        book: {name: '', description: '', createdAt: '', publish: '', bookId: ""},
+        book: {name: '', description: '', createdAt: '', bookId: ""},
         indexBook: -1,
         openEditModal: false,
       })
@@ -175,10 +153,12 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
   render() {
     return (
       <div>
-        <Header as="h1">BOOKS</Header>
+        <Header as="h1">Book managements</Header>
 
-        {this.renderBookModal()}
-        {this.renderBookEditModal()}
+        {this.renderCreateBook()}
+
+        {this.renderEditBook()}
+
         {this.renderCreateBookInput()}
 
         {this.renderBookList()}
@@ -186,44 +166,61 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
     )
   }
 
-  renderBookModal() {
+  renderCreateBookInput() {
+    return (
+      <Grid.Row>
+        <Grid.Column width={16}>
+          <Divider />
+        </Grid.Column>
+        <Grid.Column width={16}>
+          <Button
+            icon='add'
+            positive
+            onClick={()=>this.setOpen(true)}
+          />
+        </Grid.Column>
+      </Grid.Row>
+    )
+  }
+
+  renderCreateBook() {
     return (
       <Modal
             onClose={() => this.setOpen(false)}
             onOpen={() => this.setOpen(true)}
-            open={this.state.openAddModal}
+            open={this.state.addBookModal}
           >
             <Modal.Header>Add new Book</Modal.Header>
             <Modal.Content>
             <Form>
               <Form.Field required>
-                <label>Title</label>
-                <Input placeholder='Please enter the Title' onChange={this.handleTitleChange} />
+                <label>Book Title</label>
+                <Input placeholder='Please enter the Book Title' onChange={this.handleTitleChange} />
               </Form.Field>
-              <Form.Field required>
+              <Form.Field>
                 <label>Description</label>
                 <Input placeholder='Please enter the Description' onChange={this.handleDescriptionChange}/>
               </Form.Field>
             </Form>
             </Modal.Content>
             <Modal.Actions>
-              <Button color='black' onClick={() => this.setOpen(false)}>
+              <Button color='green' onClick={() => this.setOpen(false)}>
                 Cancel
               </Button>
               <Button
-                content="Add"
+                content="Add Book"
                 labelPosition='right'
                 icon='add'
                 onClick={()=>this.onBookCreate()}
                 positive
-                disabled={this.state.newBook.name =='' || this.state.newBook.description == ''}
+                disabled={this.state.newBook.name ==''}
               />
             </Modal.Actions>
        </Modal>
     )
   }
 
-  renderBookEditModal() {
+  renderEditBook() {
     return (
       <Modal
             onClose={() => this.setEdit(false, -1)}
@@ -234,17 +231,17 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
             <Modal.Content>
             <Form>
               <Form.Field required>
-                <label>Title</label>
+                <label>Book Title</label>
                 <Input placeholder='Please enter the Title' onChange={this.handleTitleEditChange} value={this.state.book.name}/>
               </Form.Field>
-              <Form.Field required>
+              <Form.Field>
                 <label>Description</label>
                 <Input placeholder='Please enter the Description' onChange={this.handleDescriptionEditChange} value={this.state.book.description}/>
               </Form.Field>
             </Form>
             </Modal.Content>
             <Modal.Actions>
-              <Button color='black' onClick={() => this.setEdit(false, -1)}>
+              <Button color='yellow' onClick={() => this.setEdit(false, -1)}>
                 Cancel
               </Button>
               <Button
@@ -259,22 +256,6 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
     )
   }
 
-  renderCreateBookInput() {
-    return (
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Divider />
-        </Grid.Column>
-        <Grid.Column width={16}>
-            <Button
-                  icon='add'
-                  positive
-                  onClick={()=>this.setOpen(true)}
-            />
-        </Grid.Column>
-      </Grid.Row>
-    )
-  }
 
   renderBookList() {
     if (this.state.loadingBooks) {
@@ -288,7 +269,7 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading BOOKS
+          Loading Books
         </Loader>
       </Grid.Row>
     )
@@ -314,9 +295,6 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
                <b>Upload</b>
                </Grid.Column>
                <Grid.Column width={1} floated="right">
-               <b>Publish</b>
-               </Grid.Column>
-               <Grid.Column width={1} floated="right">
                 <b>Delete</b>
                </Grid.Column>
                <Grid.Column width={16}>
@@ -340,7 +318,7 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
-                  color="blue"
+                  color="orange"
                   onClick={()=>this.setEdit(true, pos)}
                 >
                   <Icon name="pencil" />
@@ -349,19 +327,10 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
-                  color="blue"
+                  color="green"
                   onClick={() => this.onEditButtonClick(book.bookId)}
                 >
                   <Icon name="upload" />
-                </Button>
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
-                <Button
-                  icon
-                  color={book.publish == 'y'? "blue": "brown"}
-                  onClick={() => this.onPublishBook(pos)}
-                >
-                  <Icon name="share" />
                 </Button>
               </Grid.Column>
               <Grid.Column width={1} floated="right">
