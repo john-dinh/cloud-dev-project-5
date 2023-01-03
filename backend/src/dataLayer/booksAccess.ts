@@ -80,7 +80,7 @@ export class BookAccess {
                 userId,
                 bookId
             },
-            UpdateExpression: "set description =:description, publish=:publish, #name=:name, createdAt=:createdAt",
+            UpdateExpression: "set description =:description, #name=:name, createdAt=:createdAt",
             ExpressionAttributeValues: {
                 ":name": name,
                 ":description": description,

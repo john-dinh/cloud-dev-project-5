@@ -33,18 +33,8 @@ export class EditBook extends React.PureComponent<
     uploadState: UploadState.NoUpload
   }
 
-  handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (!files) return
-
-    this.setState({
-      file: files[0]
-    })
-  }
-
   handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
-
     try {
       if (!this.state.file) {
         alert('File should be selected')
@@ -57,7 +47,7 @@ export class EditBook extends React.PureComponent<
       this.setUploadState(UploadState.UploadingFile)
       await uploadFile(uploadUrl, this.state.file)
 
-      alert('File was uploaded!')
+      alert('Image was uploaded!')
     } catch (e) {
       console.log('Could not upload a file: ' , e)
     } finally {
@@ -71,22 +61,29 @@ export class EditBook extends React.PureComponent<
     })
   }
 
+  handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files) return
+
+    this.setState({
+      file: files[0]
+    })
+  }
+
   render() {
     return (
       <div>
-        <h1>Add Images</h1>
-
+        <h1>Add Image</h1>
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
             <label>File</label>
             <input
               type="file"
               accept="image/*"
-              placeholder="Image to upload"
+              placeholder="Select image to upload"
               onChange={this.handleFileChange}
             />
           </Form.Field>
-
           {this.renderButton()}
         </Form>
       </div>
@@ -94,7 +91,6 @@ export class EditBook extends React.PureComponent<
   }
 
   renderButton() {
-
     return (
       <div>
         {this.state.uploadState === UploadState.FetchingPresignedUrl && <p>Uploading image metadata</p>}

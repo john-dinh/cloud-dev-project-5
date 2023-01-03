@@ -1,1 +1,10 @@
 **/.DS_Store
+backend/package-lock.json
+backend/package.json
+.idea/cloud-dev-project-5.iml
+.idea/libraries/_serverless.xml
+.idea/libraries/fixture.xml
+.idea/libraries/java_invoke_local_all.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml

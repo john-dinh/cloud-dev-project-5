@@ -1,5 +1,6 @@
 import  { BookAccess, createS3Client } from '../dataLayer/booksAccess';
 import { BookItem } from '../models/BookItem'
+
 const bookData = new BookAccess();
 export const getBooksForUser = async (userId: string) => {
     return await bookData.getBooks(userId);
@@ -7,6 +8,14 @@ export const getBooksForUser = async (userId: string) => {
 
 export const getBooksForPublish = async (publish, createdAt) => {
   return await bookData.getBooksForPublish(publish, createdAt);
+}
+
+export const updateBook = async (payload: any) => {
+    return await bookData.updateBook(payload);
+}
+
+export const updateAttachmentBook = async (payload: any) => {
+    return await bookData.updateAttachmentBook(payload);
 }
 
 export const createBook = async (bookItem: BookItem) => {
@@ -25,18 +34,8 @@ export const deleteBook = async (userId: string, bookId: string) => {
     return await bookData.deleteBook(userId, bookId);
 }
 
-export const updateBook = async (payload: any) => {
-    return await bookData.updateBook(payload);
-}
-
-export const updateAttachmentBook = async (payload: any) => {
-    return await bookData.updateAttachmentBook(payload);
-}
-
-export const createAttachmentPresignedUrl = async (bookId: string) => {
-
+export const createAttachmentUrl = async (bookId: string) => {
     const s3Client = createS3Client()
-
       const write = s3Client.getSignedUrl('putObject', {
         Bucket: process.env.ATTACHMENT_S3_BUCKET,
         Key: `${bookId}.jpg`,
@@ -51,7 +50,6 @@ export const createAttachmentPresignedUrl = async (bookId: string) => {
       })
 
       return {write, read};
-
 }
 
 

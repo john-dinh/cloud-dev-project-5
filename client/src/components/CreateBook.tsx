@@ -31,7 +31,7 @@ interface BooksState {
   loadingBooks: boolean,
   addBookModal: boolean,
   openEditModal: boolean,
-  indexBook: number,
+  indexBook: number
 }
 
 export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
@@ -44,20 +44,10 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
       description: ''
     },
     newBook: { name: '', description: '' },
-    loadingBooks: true,
     addBookModal: false,
     openEditModal: false,
-    indexBook: -1,
-
-  }
-  
-  handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newBook = {...this.state.newBook, name: event.target.value };
-    this.setState({ newBook })
-  }
-  handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newBook = {...this.state.newBook, description: event.target.value };
-    this.setState({ newBook })
+    loadingBooks: true,
+    indexBook: -1
   }
 
   handleTitleEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +58,15 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
   handleDescriptionEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const book = {...this.state.book, description: event.target.value };
     this.setState({ book })
+  }
+
+  handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newBook = {...this.state.newBook, name: event.target.value };
+    this.setState({ newBook })
+  }
+  handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newBook = {...this.state.newBook, description: event.target.value };
+    this.setState({ newBook })
   }
 
   setOpen = (openAddModal: boolean) => {
@@ -175,6 +174,7 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
         <Grid.Column width={16}>
           <Button
             icon='add'
+            content="Add Book"
             positive
             onClick={()=>this.setOpen(true)}
           />
@@ -195,11 +195,11 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
             <Form>
               <Form.Field required>
                 <label>Book Title</label>
-                <Input placeholder='Please enter the Book Title' onChange={this.handleTitleChange} />
+                <Input placeholder='Book Title' onChange={this.handleTitleChange} />
               </Form.Field>
               <Form.Field>
                 <label>Description</label>
-                <Input placeholder='Please enter the Description' onChange={this.handleDescriptionChange}/>
+                <Input placeholder='Description' onChange={this.handleDescriptionChange}/>
               </Form.Field>
             </Form>
             </Modal.Content>
@@ -208,55 +208,17 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
                 Cancel
               </Button>
               <Button
+                onClick={()=>this.onBookCreate()}
                 content="Add Book"
                 labelPosition='right'
                 icon='add'
-                onClick={()=>this.onBookCreate()}
                 positive
-                disabled={this.state.newBook.name ==''}
+                disabled={this.state.newBook.name =='' || this.state.newBook.name.length < 3}
               />
             </Modal.Actions>
        </Modal>
     )
   }
-
-  renderEditBook() {
-    return (
-      <Modal
-            onClose={() => this.setEdit(false, -1)}
-            onOpen={() => this.setEdit(true, -1)}
-            open={this.state.openEditModal}
-          >
-            <Modal.Header>Edit Book</Modal.Header>
-            <Modal.Content>
-            <Form>
-              <Form.Field required>
-                <label>Book Title</label>
-                <Input placeholder='Please enter the Title' onChange={this.handleTitleEditChange} value={this.state.book.name}/>
-              </Form.Field>
-              <Form.Field>
-                <label>Description</label>
-                <Input placeholder='Please enter the Description' onChange={this.handleDescriptionEditChange} value={this.state.book.description}/>
-              </Form.Field>
-            </Form>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='yellow' onClick={() => this.setEdit(false, -1)}>
-                Cancel
-              </Button>
-              <Button
-                content="Save"
-                labelPosition='right'
-                icon='save'
-                onClick={()=>this.onBookUpdate(this.state.indexBook)}
-                positive
-              />
-            </Modal.Actions>
-       </Modal>
-    )
-  }
-
-
   renderBookList() {
     if (this.state.loadingBooks) {
       return this.renderLoading()
@@ -275,37 +237,78 @@ export class CreateBook extends React.PureComponent<BooksProps, BooksState> {
     )
   }
 
+  renderEditBook() {
+    return (
+      <Modal
+        onClose={() => this.setEdit(false, -1)}
+        onOpen={() => this.setEdit(true, -1)}
+        open={this.state.openEditModal}
+      >
+        <Modal.Header>Edit Book</Modal.Header>
+        <Modal.Content>
+          <Form>
+            <Form.Field required>
+              <label>Book Title</label>
+              <Input placeholder='Book Title' onChange={this.handleTitleEditChange} value={this.state.book.name}/>
+            </Form.Field>
+            <Form.Field>
+              <label>Description</label>
+              <Input placeholder='Description' onChange={this.handleDescriptionEditChange} value={this.state.book.description}/>
+            </Form.Field>
+          </Form>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color='brown' onClick={() => this.setEdit(false, -1)}>
+            Cancel
+          </Button>
+          <Button
+            icon='save'
+            content="Update"
+            labelPosition='right'
+            onClick={()=>this.onBookUpdate(this.state.indexBook)}
+            positive
+          />
+        </Modal.Actions>
+      </Modal>
+    )
+  }
+
   renderBooksList() {
     return (
       <Grid padded>
         <Grid.Row key={1}>
-               <Grid.Column width={4} verticalAlign="middle">
-                 <b>Title</b>
-               </Grid.Column>
-               <Grid.Column width={5} verticalAlign="middle">
-                 <b>Description</b>
-               </Grid.Column>
-               <Grid.Column width={3} floated="right">
-               <b>Created At</b>
-               </Grid.Column>
-               <Grid.Column width={1} floated="right">
-               <b>Edit</b>
-               </Grid.Column>
-               <Grid.Column width={1} floated="right">
-               <b>Upload</b>
-               </Grid.Column>
-               <Grid.Column width={1} floated="right">
-                <b>Delete</b>
-               </Grid.Column>
-               <Grid.Column width={16}>
-                 <Divider />
-               </Grid.Column>
+          <Grid.Column width={1} verticalAlign="middle">
+            <b>No</b>
+          </Grid.Column>
+           <Grid.Column width={4} verticalAlign="middle">
+             <b>Title</b>
+           </Grid.Column>
+           <Grid.Column width={5} verticalAlign="middle">
+             <b>Description</b>
+           </Grid.Column>
+           <Grid.Column width={3} floated="right">
+           <b>Created At</b>
+           </Grid.Column>
+           <Grid.Column width={1} floated="right">
+           <b>Edit</b>
+           </Grid.Column>
+           <Grid.Column width={1} floated="right">
+           <b>Upload</b>
+           </Grid.Column>
+           <Grid.Column width={1} floated="right">
+            <b>Delete</b>
+           </Grid.Column>
+           <Grid.Column width={16}>
+             <Divider />
+           </Grid.Column>
         </Grid.Row>
 
         {this.state.books.map((book, pos) => {
           return (
             <Grid.Row key={book.bookId}>
-               
+              <Grid.Column width={1} verticalAlign="middle">
+                {pos}
+              </Grid.Column>
               <Grid.Column width={4} verticalAlign="middle">
                 {book.name}
               </Grid.Column>

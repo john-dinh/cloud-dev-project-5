@@ -1,7 +1,7 @@
 {
-  "name": "serverless-article-app",
+  "name": "serverless-book-management-app",
   "version": "1.0.0",
-  "description": "Serverless ARTICLE image app",
+  "description": "Serverless Book image app",
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/http-errors": "^1.6.1",

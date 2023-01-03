@@ -5,5 +5,4 @@ export interface UpdateBookRequest {
   name: string
   description: string
   createdAt: string
-  publish: boolean
 }
